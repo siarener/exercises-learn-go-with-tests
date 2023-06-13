@@ -34,7 +34,7 @@ Welcome to my **amazing blog**. I am going to write about my family recipes, and
 
 		approvals.VerifyString(t, buf.String())
 	})
-	t.Run("it renders and index of posts", func(t *testing.T) {
+	t.Run("it renders an index of posts", func(t *testing.T) {
 		buf := bytes.Buffer{}
 		posts := []blogrenderer.Post{{Title: "Hello World"}, {Title: "Hello World 2"}}
 
@@ -42,12 +42,7 @@ Welcome to my **amazing blog**. I am going to write about my family recipes, and
 			t.Fatal(err)
 		}
 
-		got := buf.String()
-		want := `<ol><li><a href="/post/hello-world">Hello World</a></li><li><a href="posts/hello-world-2>Hello World 2</a></li></ol>`
-
-		if got != want {
-			t.Errorf("got %q want %q", got, want)
-		}
+		approvals.VerifyString(t, buf.String())
 	})
 }
 

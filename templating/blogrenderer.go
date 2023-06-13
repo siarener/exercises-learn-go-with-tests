@@ -4,6 +4,7 @@ import (
 	"embed"
 	"html/template"
 	"io"
+	"strings"
 
 	"github.com/gomarkdown/markdown"
 	"github.com/gomarkdown/markdown/parser"
@@ -24,6 +25,10 @@ type PostRenderer struct {
 type postViewModel struct {
 	Post
 	HTMLBody template.HTML
+}
+
+func (p Post) SanitisedTitle() string {
+	return strings.ToLower(strings.Replace(p.Title, " ", "-", -1))
 }
 
 var (
@@ -52,7 +57,7 @@ func NewPostRenderer() (*PostRenderer, error) {
 }
 
 func (r *PostRenderer) Render(w io.Writer, p Post) error {
-	return r.templ.Execute(w, newPostVM(p, r))
+	return r.templ.ExecuteTemplate(w, "blog.gohtml", newPostVM(p, r))
 }
 
 func newPostVM(p Post, r *PostRenderer) postViewModel {
@@ -62,15 +67,5 @@ func newPostVM(p Post, r *PostRenderer) postViewModel {
 }
 
 func (r *PostRenderer) RenderIndex(w io.Writer, posts []Post) error {
-	indexTemplate := `<ol>{{range .}}<li><a href="/post/{{.Title}}">{{.Title}}</a></li>{{end}}</ol>`
-
-	templ, err := template.New("index").Parse(indexTemplate)
-	if err != nil {
-		return err
-	}
-
-	if err := templ.Execute(w, posts); err != nil {
-		return err
-	}
-	return nil
+	return r.templ.ExecuteTemplate(w, "index.gohtml", posts)
 }
