@@ -4,6 +4,9 @@ import (
 	"embed"
 	"html/template"
 	"io"
+
+	"github.com/gomarkdown/markdown"
+	"github.com/gomarkdown/markdown/parser"
 )
 
 type Post struct {
@@ -12,8 +15,15 @@ type Post struct {
 	Tags []string
 }
 
+// PostRenderer renders data into HTML
 type PostRenderer struct {
-	templ *template.Template
+	templ    *template.Template
+	mdParser *parser.Parser
+}
+
+type postViewModel struct {
+	Post
+	HTMLBody template.HTML
 }
 
 var (
@@ -35,13 +45,32 @@ func NewPostRenderer() (*PostRenderer, error) {
 		return nil, err
 	}
 
-	return &PostRenderer{templ: templ}, nil
+	extensions := parser.CommonExtensions | parser.AutoHeadingIDs //| parser.NoEmptyLineBeforeBlock
+	parser := parser.NewWithExtensions(extensions)
+
+	return &PostRenderer{templ: templ, mdParser: parser}, nil
 }
 
 func (r *PostRenderer) Render(w io.Writer, p Post) error {
-	if err := r.templ.Execute(w, p); err != nil {
+	return r.templ.Execute(w, newPostVM(p, r))
+}
+
+func newPostVM(p Post, r *PostRenderer) postViewModel {
+	vm := postViewModel{Post: p}
+	vm.HTMLBody = template.HTML(markdown.ToHTML([]byte(p.Body), r.mdParser, nil))
+	return vm
+}
+
+func (r *PostRenderer) RenderIndex(w io.Writer, posts []Post) error {
+	indexTemplate := `<ol>{{range .}}<li><a href="/post/{{.Title}}">{{.Title}}</a></li>{{end}}</ol>`
+
+	templ, err := template.New("index").Parse(indexTemplate)
+	if err != nil {
 		return err
 	}
 
+	if err := templ.Execute(w, posts); err != nil {
+		return err
+	}
 	return nil
 }
