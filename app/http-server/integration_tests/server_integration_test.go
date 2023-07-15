@@ -11,7 +11,7 @@ import (
 
 func TestRecordingWinsAndRetrievingThem(t *testing.T) {
 	store := db.NewInMemoryStore()
-	server := poker.PlayerServer{Store: store}
+	server := poker.NewPlayerServer(store)
 	player := "Pepper"
 
 	server.ServeHTTP(httptest.NewRecorder(), poker.NewPostWinRequest(player))
