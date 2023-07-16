@@ -1,5 +1,6 @@
 package db
 
+/*
 import "github.com/apfelkraepfla/exercises-learn-go-with-tests/app/http-server/poker"
 
 func NewInMemoryStore() *InMemoryPlayerStore {
@@ -25,3 +26,4 @@ func (i *InMemoryPlayerStore) GetLeague() []poker.Player {
 	}
 	return league
 }
+*/

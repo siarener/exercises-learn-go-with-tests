@@ -1,31 +1,61 @@
 package db
 
 import (
-	"io"
+	"encoding/json"
+	"fmt"
+	"os"
 
 	"github.com/apfelkraepfla/exercises-learn-go-with-tests/app/http-server/poker"
 )
 
+// FileSystemPlayerStore stores players in the filesystem.
 type FileSystemPlayerStore struct {
-	database io.ReadSeeker
+	Database *json.Encoder
+	league   poker.League
 }
 
-// Read JSON from Reader
-func (f *FileSystemPlayerStore) GetLeague() []poker.Player {
-	f.database.Seek(0, 0)
-	league, _ := poker.NewLeague(f.database)
-	return league
+// NewFileSystemPlayerStore creates a FileSystemPlayerStore initialising the store if needed.
+func NewFileSystemPlayerStore(file *os.File) (*FileSystemPlayerStore, error) {
+	file.Seek(0, 0)
+	league, err := poker.NewLeague(file)
+
+	if err != nil {
+		return nil, fmt.Errorf("problem loading player store from file %s, %v", file.Name(), err)
+	}
+	return &FileSystemPlayerStore{
+		Database: json.NewEncoder(&tape{file}),
+		league:   league,
+	}, nil
+
 }
 
+// GetLeague returns the scores of all the players.
+func (f *FileSystemPlayerStore) GetLeague() poker.League {
+	return f.league
+}
+
+// GetPlayerScore retrieves a player's score.
 func (f *FileSystemPlayerStore) GetPlayerScore(name string) int {
 
-	var wins int
+	player := f.league.Find(name)
 
-	for _, player := range f.GetLeague() {
-		if player.Name == name {
-			wins = player.Wins
-			break
-		}
+	if player != nil {
+		return player.Wins
 	}
-	return wins
+
+	return 0
+}
+
+// RecordWin will store a win for a player, incrementing wins if already known.
+func (f *FileSystemPlayerStore) RecordWin(name string) {
+
+	player := f.league.Find(name)
+
+	if player != nil {
+		player.Wins++
+	} else {
+		f.league = append(f.league, poker.Player{Name: name, Wins: 1})
+	}
+
+	f.Database.Encode(f.league)
 }
