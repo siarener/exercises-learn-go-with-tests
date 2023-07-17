@@ -1,9 +1,8 @@
-package db
+package poker
 
 import (
+	"os"
 	"testing"
-
-	"github.com/apfelkraepfla/exercises-learn-go-with-tests/app/poker"
 )
 
 func TestFileSystemStore(t *testing.T) {
@@ -20,15 +19,15 @@ func TestFileSystemStore(t *testing.T) {
 
 		got := store.GetLeague()
 
-		want := []poker.Player{
+		want := []Player{
 			{Name: "Chris", Wins: 33},
 			{Name: "Cleo", Wins: 10},
 		}
 
-		poker.AssertLeague(t, got, want)
+		AssertLeague(t, got, want)
 
 		got = store.GetLeague()
-		poker.AssertLeague(t, got, want)
+		AssertLeague(t, got, want)
 	})
 
 	t.Run("get player score", func(t *testing.T) {
@@ -93,5 +92,32 @@ func TestFileSystemStore(t *testing.T) {
 func assertScoreEquals(t testing.TB, got, want int) {
 	if got != want {
 		t.Errorf("got %d want %d", got, want)
+	}
+}
+
+// Create temporary file to use
+func CreateTempFile(t testing.TB, initialData string) (*os.File, func()) {
+	t.Helper()
+
+	tmpfile, err := os.CreateTemp("", "db")
+
+	if err != nil {
+		t.Fatalf("could not create temp file %v", err)
+	}
+
+	tmpfile.Write([]byte(initialData))
+
+	removeFile := func() {
+		tmpfile.Close()
+		os.Remove(tmpfile.Name())
+	}
+
+	return tmpfile, removeFile
+}
+
+func AssertNoError(t testing.TB, err error) {
+	t.Helper()
+	if err != nil {
+		t.Fatalf("didn't expect an error but got one, %v", err)
 	}
 }

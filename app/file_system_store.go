@@ -1,18 +1,16 @@
-package db
+package poker
 
 import (
 	"encoding/json"
 	"fmt"
 	"os"
 	"sort"
-
-	"github.com/apfelkraepfla/exercises-learn-go-with-tests/app/poker"
 )
 
 // FileSystemPlayerStore stores players in the filesystem.
 type FileSystemPlayerStore struct {
 	Database *json.Encoder
-	league   poker.League
+	league   League
 }
 
 // NewFileSystemPlayerStore creates a FileSystemPlayerStore initialising the store if needed.
@@ -24,7 +22,7 @@ func NewFileSystemPlayerStore(file *os.File) (*FileSystemPlayerStore, error) {
 		return nil, fmt.Errorf("problem initialising player db file, %v", err)
 	}
 
-	league, err := poker.NewLeague(file)
+	league, err := NewLeague(file)
 
 	if err != nil {
 		return nil, fmt.Errorf("problem loading player store from file %s, %v", file.Name(), err)
@@ -54,7 +52,7 @@ func initialisePlayerDBFile(file *os.File) error {
 }
 
 // GetLeague returns the scores of all the players.
-func (f *FileSystemPlayerStore) GetLeague() poker.League {
+func (f *FileSystemPlayerStore) GetLeague() League {
 	sort.Slice(f.league, func(i, j int) bool { return f.league[i].Wins > f.league[j].Wins })
 	return f.league
 }
@@ -79,7 +77,7 @@ func (f *FileSystemPlayerStore) RecordWin(name string) {
 	if player != nil {
 		player.Wins++
 	} else {
-		f.league = append(f.league, poker.Player{Name: name, Wins: 1})
+		f.league = append(f.league, Player{Name: name, Wins: 1})
 	}
 
 	f.Database.Encode(f.league)
