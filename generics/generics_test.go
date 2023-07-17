@@ -1,4 +1,4 @@
-package generics
+package main
 
 import "testing"
 
