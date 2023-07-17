@@ -1,4 +1,4 @@
-package generics
+package main
 
 type Stack[T any] struct {
 	values []T
