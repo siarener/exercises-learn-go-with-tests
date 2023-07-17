@@ -1,7 +1,7 @@
 package db
 
 /*
-import "github.com/apfelkraepfla/exercises-learn-go-with-tests/app/http-server/poker"
+import "github.com/apfelkraepfla/exercises-learn-go-with-tests/app/poker"
 
 func NewInMemoryStore() *InMemoryPlayerStore {
 	return &InMemoryPlayerStore{map[string]int{}}

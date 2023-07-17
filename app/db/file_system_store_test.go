@@ -3,7 +3,7 @@ package db
 import (
 	"testing"
 
-	"github.com/apfelkraepfla/exercises-learn-go-with-tests/app/http-server/poker"
+	"github.com/apfelkraepfla/exercises-learn-go-with-tests/app/poker"
 )
 
 func TestFileSystemStore(t *testing.T) {

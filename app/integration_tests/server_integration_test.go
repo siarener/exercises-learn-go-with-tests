@@ -5,8 +5,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/apfelkraepfla/exercises-learn-go-with-tests/app/http-server/db"
-	"github.com/apfelkraepfla/exercises-learn-go-with-tests/app/http-server/poker"
+	"github.com/apfelkraepfla/exercises-learn-go-with-tests/app/db"
+	"github.com/apfelkraepfla/exercises-learn-go-with-tests/app/poker"
 )
 
 func TestRecordingWinsAndRetrievingThem(t *testing.T) {
