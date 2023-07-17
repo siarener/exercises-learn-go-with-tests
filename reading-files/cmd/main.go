@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/apfelkraepfla/exercises-learn-go-with-tests/reading-files/blogposts"
+	blogposts "github.com/apfelkraepfla/exercises-learn-go-with-tests/reading-files"
 )
 
 func main() {

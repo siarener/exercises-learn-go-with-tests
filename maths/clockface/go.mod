@@ -1,4 +1,4 @@
-module clockface
+module github.com/apfelkraepfla/exercises-learn-go-with-tests/clockface
 
 go 1.20
 
