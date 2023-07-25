@@ -5,20 +5,19 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/apfelkraepfla/exercises-learn-go-with-tests/app/db"
 	"github.com/apfelkraepfla/exercises-learn-go-with-tests/app/poker"
 )
 
 const dbFileName = "game.db.json"
 
 func main() {
-	database, err := os.OpenFile(dbFileName, os.O_RDWR|os.O_CREATE, 0666)
+	db, err := os.OpenFile(dbFileName, os.O_RDWR|os.O_CREATE, 0666)
 
 	if err != nil {
 		log.Fatalf("problem opening %s %v", dbFileName, err)
 	}
 
-	store, err := db.FileSystemPlayerStore{Database: database}
+	store, err := poker.NewFileSystemPlayerStore(db)
 
 	if err != nil {
 		log.Fatalf("problem creating file system player store, %v", err)
