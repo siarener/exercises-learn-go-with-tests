@@ -1,3 +1,3 @@
-module github.com/apfelkraepfla/exercises-learn-go-with-tests
+module github.com/siarener/exercises-learn-go-with-tests
 
 go 1.20

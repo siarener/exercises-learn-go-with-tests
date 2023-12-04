@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	. "github.com/apfelkraepfla/exercises-learn-go-with-tests/math/clockface/svg"
+	. "github.com/siarener/exercises-learn-go-with-tests/math/clockface/svg"
 )
 
 type SVG struct {

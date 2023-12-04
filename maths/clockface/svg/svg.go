@@ -6,7 +6,7 @@ import (
 	"io"
 	"time"
 
-	cf "github.com/apfelkraepfla/exercises-learn-go-with-tests/math/clockface"
+	cf "github.com/siarener/exercises-learn-go-with-tests/math/clockface"
 )
 
 /*

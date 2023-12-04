@@ -1,4 +1,4 @@
-module github.com/apfelkraepfla/exercises-learn-go-with-tests/context
+module github.com/siarener/exercises-learn-go-with-tests/context
 
 
 go 1.20
